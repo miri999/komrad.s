@@ -49,8 +49,7 @@ public class mouse_Look : MonoBehaviour
             Transform objectHit = hit.transform;
             if(Vector3.Distance(this.transform.position, objectHit.position) < 50)
             {
-                GameObject hitgo = objectHit.gameObject;
-                playerBody.rotation = objectHit.transform.rotation;
+                playerBody.transform.up = hit.normal;
             }
         }else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButton(0))
         {

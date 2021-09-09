@@ -16,6 +16,9 @@ public class mouse_Look : MonoBehaviour
     public Material UngUhn;
     public Material yes;
     public LayerMask mask;
+    public GameObject sphere;
+    private GameObject cursw;
+    public float rotSpeed =10;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +50,7 @@ public class mouse_Look : MonoBehaviour
         {
             prev.GetComponent<Renderer>().material = orig;
         }
-        
+        Destroy(cursw);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButtonUp(0))
         {
             //phisics stuff (ask miri)
@@ -56,7 +59,9 @@ public class mouse_Look : MonoBehaviour
             {
                 playerBody.transform.up = hit.normal;
             }
-        }else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButton(0))
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(hit.normal.x, hit.normal.y, hit.normal.z), rotSpeed * Time.deltaTime);
+        }
+        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
         {
             //feedback
             Transform objectHit = hit.transform;
@@ -68,10 +73,9 @@ public class mouse_Look : MonoBehaviour
             {
                 highlight = yes;
             }
-            GameObject hitgo = objectHit.gameObject;
-            orig = hitgo.GetComponent<Renderer>().material;
-            hitgo.GetComponent<Renderer>().material = highlight;
-            prev = hitgo;
+            cursw = Instantiate(sphere,hit.point, new Quaternion(0,0,0,0));
+            cursw.transform.localScale = new Vector3(hit.distance/30, hit.distance/30, hit.distance/30);
+            sphere.GetComponent<Renderer>().material = highlight;
         }
     }
 }

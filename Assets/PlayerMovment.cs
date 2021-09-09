@@ -18,14 +18,13 @@ public class PlayerMovment : MonoBehaviour
     public Vector3 velocity;
     bool isGrounded;
 
-    // Start is called before the first frame update
     void Start()
     {
         controller.freezeRotation = true;
     }
-    // Update is called once per frame
     void FixedUpdate()
     {
+        //grounding
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
@@ -36,12 +35,12 @@ public class PlayerMovment : MonoBehaviour
         {
             velocity.y -= gravity * Time.deltaTime;
         }
-
+        //movement
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
-        //Quaternion zw = this.transform.rotation;
+        
         controller.velocity = (move * speed * Time.deltaTime)+(this.transform.rotation * velocity * Time.deltaTime);
 
 
@@ -50,6 +49,7 @@ public class PlayerMovment : MonoBehaviour
     }
     private void Update()
     {
+        //jumping
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Abs(jumpHeight * -2 * gravity);

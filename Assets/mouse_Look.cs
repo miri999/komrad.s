@@ -6,7 +6,7 @@ using UnityEngine;
 public class mouse_Look : MonoBehaviour
 {
 
-
+    //variables (uuhhhhmm?!?!)
     public float mouseSensitivity = 100f;
     float xRotation = 0f;
     public Transform playerBody;
@@ -19,12 +19,14 @@ public class mouse_Look : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //cursor stuff
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //THE IMPORTANT STUFF
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -34,9 +36,11 @@ public class mouse_Look : MonoBehaviour
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
 
+        //raycasting
         RaycastHit hit;
         Ray ray = this.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
+        //some rendering stuff
         if (prev == null)
         {}
         else
@@ -46,6 +50,7 @@ public class mouse_Look : MonoBehaviour
         
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButtonUp(0))
         {
+            //phisics stuff (ask miri)
             Transform objectHit = hit.transform;
             if(Vector3.Distance(this.transform.position, objectHit.position) < 50)
             {
@@ -53,7 +58,7 @@ public class mouse_Look : MonoBehaviour
             }
         }else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButton(0))
         {
-            
+            //feedback
             Transform objectHit = hit.transform;
             if(Vector3.Distance(this.transform.position, objectHit.position) > 50)
             {

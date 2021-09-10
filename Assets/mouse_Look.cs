@@ -51,7 +51,7 @@ public class mouse_Look : MonoBehaviour
             prev.GetComponent<Renderer>().material = orig;
         }
         Destroy(cursw);
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButtonUp(0))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButtonUp(1))
         {
             //phisics stuff (ask miri)
             Transform objectHit = hit.transform;
@@ -61,7 +61,7 @@ public class mouse_Look : MonoBehaviour
             }
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(hit.normal.x, hit.normal.y, hit.normal.z), rotSpeed * Time.deltaTime);
         }
-        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButton(1))
         {
             //feedback
             Transform objectHit = hit.transform;

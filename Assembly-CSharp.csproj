@@ -56,8 +56,9 @@
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\mouse_Look.cs" />
     <Compile Include="Assets\PlayerMovment.cs" />
-    <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\jgf.cs" />
+    <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\laserpewpew.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

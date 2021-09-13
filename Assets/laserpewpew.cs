@@ -7,6 +7,10 @@ public class laserpewpew : MonoBehaviour
     public LineRenderer line;
     public Camera cam;
     public string enemyTag = "enemy";
+    public GameObject fx;
+    public float speed=100;
+    public float interval = 0.2f;
+    private float time = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,19 +20,23 @@ public class laserpewpew : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        this.transform.rotation = Quaternion.Euler(new Vector3(cam.gameObject.transform.rotation.eulerAngles.x, cam.gameObject.transform.rotation.eulerAngles.y, cam.gameObject.transform.rotation.eulerAngles.z));
         RaycastHit hit;
-        Ray ray = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-        line.enabled = false;
-        if (Input.GetMouseButton(0) && Physics.Raycast(ray, out hit, Mathf.Infinity))
+        time += Time.deltaTime;
+        if (Input.GetMouseButton(0) && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity) && time>interval)
         {
-            line.enabled = true;
-            line.SetPosition(0, this.transform.position);
-            line.SetPosition(1, hit.point);
-            if ((hit.transform).parent.tag == enemyTag)
+            GameObject go = Instantiate(fx, transform);
+            Object.Destroy(go, hit.distance / speed);
+            if ((hit.transform).gameObject.tag == enemyTag)
             {
-                Object.Destroy(hit.transform.gameObject);
+                Object.Destroy(hit.transform.gameObject, hit.distance/speed+1);
             }
+            time = 0f;
+        }else if(Input.GetMouseButton(0)&& time > interval&& !Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        {
+            GameObject go = Instantiate(fx, transform);
+            Object.Destroy(go, 5);
+            time = 0f;
         }
     }
 }

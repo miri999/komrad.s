@@ -10,8 +10,6 @@ public class mouse_Look : MonoBehaviour
     public float mouseSensitivity = 100f;
     float xRotation = 0f;
     public Transform playerBody;
-    private GameObject prev;
-    Material orig;
     private Material highlight;
     public Material UngUhn;
     public Material yes;
@@ -19,6 +17,8 @@ public class mouse_Look : MonoBehaviour
     public GameObject sphere;
     private GameObject cursw;
     public float rotSpeed =10;
+    public float close_Enough_Angle = 10;
+    public Quaternion target = new Quaternion(0,0,0,0);
     // Start is called before the first frame update
     void Start()
     {
@@ -44,22 +44,17 @@ public class mouse_Look : MonoBehaviour
         Ray ray = this.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
         //some rendering stuff
-        if (prev == null)
-        {}
-        else
-        {
-            prev.GetComponent<Renderer>().material = orig;
-        }
         Destroy(cursw);
+
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButtonUp(1))
         {
             //phisics stuff (ask miri)
             Transform objectHit = hit.transform;
             if(Vector3.Distance(this.transform.position, objectHit.position) < 50)
             {
-                playerBody.transform.up = hit.normal;
+                //playerBody.transform.up = hit.normal;
+                target = Quaternion.LookRotation(new Vector3(hit.normal.x, playerBody.up.y, hit.normal.z));
             }
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(hit.normal.x, hit.normal.y, hit.normal.z), rotSpeed * Time.deltaTime);
         }
         else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButton(1))
         {
@@ -76,6 +71,18 @@ public class mouse_Look : MonoBehaviour
             cursw = Instantiate(sphere,hit.point, new Quaternion(0,0,0,0));
             cursw.transform.localScale = new Vector3(hit.distance/30, hit.distance/30, hit.distance/30);
             sphere.GetComponent<Renderer>().material = highlight;
+        }
+        target=target.eulerAngles()
+    }
+    private void FixedUpdate()
+    {
+        if ((Quaternion.Angle(playerBody.rotation, target)) <= close_Enough_Angle && playerBody.rotation != target)
+        {
+            playerBody.rotation = target;
+        }
+        else if ((Quaternion.Angle(playerBody.rotation, target)) > close_Enough_Angle && playerBody.rotation != target)
+        {
+            playerBody.rotation = Quaternion.Slerp(playerBody.rotation, target, 0.5f);
         }
     }
 }

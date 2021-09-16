@@ -17,8 +17,9 @@ public class mouse_Look : MonoBehaviour
     public GameObject sphere;
     private GameObject cursw;
     public float rotSpeed =10;
-    public float close_Enough_Angle = 10;
+    public float close_Enough_Angle = 20;
     public Quaternion target = new Quaternion(0,0,0,0);
+    private bool rotating = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +55,7 @@ public class mouse_Look : MonoBehaviour
             {
                 //playerBody.transform.up = hit.normal;
                 target = Quaternion.LookRotation(new Vector3(hit.normal.x, playerBody.up.y, hit.normal.z));
+                rotating = true;
             }
         }
         else if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask) && Input.GetMouseButton(1))
@@ -72,17 +74,21 @@ public class mouse_Look : MonoBehaviour
             cursw.transform.localScale = new Vector3(hit.distance/30, hit.distance/30, hit.distance/30);
             sphere.GetComponent<Renderer>().material = highlight;
         }
-        target=target.eulerAngles()
     }
     private void FixedUpdate()
     {
         if ((Quaternion.Angle(playerBody.rotation, target)) <= close_Enough_Angle && playerBody.rotation != target)
         {
-            playerBody.rotation = target;
+            if (rotating)
+            {
+                Debug.Log("snapped");
+                playerBody.rotation = target;
+            }
+            rotating = false;
         }
-        else if ((Quaternion.Angle(playerBody.rotation, target)) > close_Enough_Angle && playerBody.rotation != target)
+        else if ((Quaternion.Angle(playerBody.rotation, target)) > close_Enough_Angle && playerBody.rotation != target && rotating)
         {
-            playerBody.rotation = Quaternion.Slerp(playerBody.rotation, target, 0.5f);
+            playerBody.rotation = Quaternion.Slerp(playerBody.rotation, target, 0.1f);
         }
     }
 }
